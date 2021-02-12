@@ -11,35 +11,43 @@ import org.apache.uima.resource.ResourceInitializationException;
 import tutorial.types.Text;
 
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegexAnnotator extends JCasAnnotator_ImplBase {
     public static final Logger LOGGER = Logger.getLogger(RegexAnnotator.class.getName());
 
-    public static final String PARAM_PATTERN = "Pattern";
+    public static final String PARAM_REGEX = "Regex";
     @ConfigurationParameter(
-        name = PARAM_PATTERN,
+        name = PARAM_REGEX,
         description = "The regular expression pattern to match",
         mandatory = true,
         defaultValue = ""
     )
-    private String _pattern;
+    private String _regex;
+
+    private Pattern _pattern;
 
     @Override
     public void initialize(UimaContext context) throws ResourceInitializationException {
         super.initialize(context);
         LOGGER.info("Initializing AE");
+        _pattern = Pattern.compile(_regex);
     }
 
     @Override
     public void process(JCas jCas) throws AnalysisEngineProcessException {
         LOGGER.info("Processing");
-        Text text = new Text(jCas);
-        text.setText("hello");
-        text.setSize(5);
-        text.addToIndexes();
-        Collection<Text> texts = JCasUtil.select(jCas, Text.class);
-        for (Text t : texts) {
-            System.out.println(t);
+
+        Matcher matcher = _pattern.matcher(jCas.getDocumentText());
+        while (matcher.find()) {
+            Text text = new Text(jCas);
+            text.setBegin(matcher.start());
+            text.setEnd(matcher.end());
+            text.setSize(matcher.end() - matcher.start());
+            String subStr = jCas.getDocumentText().substring(matcher.start(), matcher.end());
+            text.setText(subStr);
+            text.addToIndexes();
         }
     }
 
