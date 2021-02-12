@@ -4,7 +4,9 @@ reader tutorial.LineReader InputFile=C:/root/vdt/icapa/nlp/ctakes-example-repos/
 // Default Clinical Pipeline
 load ./resources/org/apache/ctakes/clinical/pipeline/DefaultFastPipeline.piper
 
-add tutorial.AE
+add tutorial.RegexAnnotator
 
 // FileTreeXmiWriter provided by cTAKES
 add org.apache.ctakes.core.cc.FileTreeXmiWriter OutputDirectory=C:/root/vdt/icapa/nlp/ctakes-example-repos/ctakes-example/references/ae/annotations
+
+// bin/runPiperFile.bat --key <key> -p C:\root\vdt\icapa\nlp\ctakes-example-repos\ctakes-example\references\ae\ae.piper
