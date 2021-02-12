@@ -1,4 +1,3 @@
 target/**/*
 .idea/**/*
-#**/*/config.properties
 src/main/resources/config.properties
