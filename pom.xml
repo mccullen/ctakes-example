@@ -68,19 +68,23 @@
     </build>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.apache.ctakes/ctakes-core -->
+        <!-- CTAKES -->
         <dependency>
             <groupId>org.apache.ctakes</groupId>
             <artifactId>ctakes-core</artifactId>
             <version>4.0.0.1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.uima/uimafit-core -->
+        <!-- UIMA FIT -->
         <dependency>
             <groupId>org.apache.uima</groupId>
             <artifactId>uimafit-core</artifactId>
             <version>2.5.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.3</version>
+        </dependency>
     </dependencies>
 
 </project>

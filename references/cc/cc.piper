@@ -1,0 +1,4 @@
+reader org.apache.ctakes.core.cr.FileTreeReader InputDirectory=C:/root/vdt/icapa/nlp/ctakes-example-repos/ctakes-example/references/cc/notes
+// Default Clinical Pipeline
+load ./resources/org/apache/ctakes/clinical/pipeline/DefaultFastPipeline.piper
+add tutorial.MedicationMentionWriter OutputFile=C:/root/vdt/icapa/nlp/ctakes-example-repos/ctakes-example/references/cc/medication-mentions.csv
