@@ -21,6 +21,7 @@
                 </configuration>
             </plugin>
 
+            <!-- jcasgen -->
             <plugin>
                 <groupId>org.apache.uima</groupId>
                 <artifactId>jcasgen-maven-plugin</artifactId>
@@ -61,6 +62,26 @@
                             <!-- OPTIONAL -->
                             <limitToProject>true</limitToProject>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Package all jars together -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
