@@ -9,4 +9,4 @@ add tutorial.RegexAnnotator Regex="trauma|loss of consciousness"
 // FileTreeXmiWriter provided by cTAKES
 add org.apache.ctakes.core.cc.FileTreeXmiWriter OutputDirectory=C:/root/vdt/icapa/nlp/ctakes-example-repos/ctakes-example/references/ae/annotations
 
-// bin/runPiperFile.bat --key <key> -p C:\root\vdt\icapa\nlp\ctakes-example-repos\ctakes-example\references\ae\ae.piper
+// Run from bat: bin/runPiperFile.bat --key <key> -p C:\root\vdt\icapa\nlp\ctakes-example-repos\ctakes-example\references\ae\ae.piper

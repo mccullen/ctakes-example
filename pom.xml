@@ -60,7 +60,7 @@
                                  generated.  The others will be presumed to be
                                  available via other projects. -->
                             <!-- OPTIONAL -->
-                            <limitToProject>true</limitToProject>
+                            <limitToProject>false</limitToProject>
                         </configuration>
                     </execution>
                 </executions>
@@ -86,12 +86,6 @@
                 </executions>
             </plugin>
         </plugins>
-
-        <testResources>
-            <testResource>
-                <directory>${project.basedir}/src/main/resources</directory>
-            </testResource>
-        </testResources>
     </build>
 
     <dependencies>

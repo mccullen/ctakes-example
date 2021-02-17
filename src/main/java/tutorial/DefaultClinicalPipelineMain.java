@@ -7,8 +7,8 @@ import org.apache.ctakes.core.pipeline.PiperFileReader;
 public class DefaultClinicalPipelineMain {
     // CHANGE THESE VALUES FOR YOUR ENVIRONMENT!!!
     public static final String PIPER_FILE = "C:/root/vdt/icapa/nlp/apache-ctakes-4.0.0/resources/org/apache/ctakes/clinical/pipeline/DefaultFastPipeline.piper";
-    public static final String INPUT_DIR = "C:/root/vdt/icapa/nlp/ctakes-example-repos/ctakes-example/references/default-clinical-pipeline/notes/";
-    public static final String OUTPUT_DIR = "C:/root/vdt/icapa/nlp/ctakes-example-repos/ctakes-example/references/default-clinical-pipeline/annotations/";
+    public static final String INPUT_DIR = "references/default-clinical-pipeline/notes/";
+    public static final String OUTPUT_DIR = "references/default-clinical-pipeline/annotations/";
     public static final String UMLS_KEY = Util.getProperty("umls.key");
 
     public static void main(String[] args) throws Exception {

@@ -9,8 +9,13 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.Progress;
+import org.apache.uima.util.ProgressImpl;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 
 /**
  * This is a collection reader so we are extending JCasCollectionReader_ImplBase
@@ -35,6 +40,8 @@ public class LineReader extends JCasCollectionReader_ImplBase {
     private String _documentText;
     // The number of documents processed so far
     private int _nDocumentsProcessed = 0;
+    // The number of documents total. Used for implementing getProgress()
+    private int _nDocumentsTotal = 0;
 
     /**
      * By the time you hit initialize, your configuration parameters WILL be set. So _inputFile WILL have
@@ -48,7 +55,20 @@ public class LineReader extends JCasCollectionReader_ImplBase {
         try {
             FileInputStream fileInputStream = new FileInputStream(_inputFile);
             _reader = new BufferedReader(new InputStreamReader(fileInputStream));
-        } catch (FileNotFoundException e) {
+            setNDocumentsTotal();
+        } catch (IOException e) {
+            LOGGER.error("Error loading file " + _inputFile, e);
+        }
+    }
+
+    private void setNDocumentsTotal() {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(_inputFile);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+            while (reader.readLine() != null) {
+                ++_nDocumentsTotal;
+            }
+        } catch (Exception e) {
             LOGGER.error("Error loading file " + _inputFile, e);
         }
     }
@@ -103,11 +123,16 @@ public class LineReader extends JCasCollectionReader_ImplBase {
         documentId.addToIndexes();
     }
 
-    // I usually just ignore this, but it is used to track the percent of documents you have completed, probably used in
-    // UIMA tools that show a progress bar or something
+    // I usually just ignore this, but I've implemented it for illustration It is used to track the percent of
+    // documents you have completed, probably used in UIMA tools that show a progress bar or something.
+    // See https://uima.apache.org/d/uimaj-current/tutorials_and_users_guides.html#ugr.tug.cpe.collection_reader.developing
     @Override
     public Progress[] getProgress() {
-        return new Progress[0];
+        // This is how I would normally just ignore it
+        //return new Progress[0];
+        return new Progress[] {
+            new ProgressImpl(_nDocumentsProcessed, _nDocumentsTotal, Progress.ENTITIES)
+        };
     }
 
     // I'm not sure if this or destroy() actually ever get called. If I set a breakpoint and run, it never hits it.

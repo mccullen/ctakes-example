@@ -6,7 +6,7 @@ import org.apache.ctakes.core.pipeline.PiperFileReader;
 
 public class CRMain {
     // CHANGE THESE VALUE TO MATCH YOUR ENVIRONMENT!!!
-    public static final String PIPER_FILE = "C:/root/vdt/icapa/nlp/ctakes-example-repos/ctakes-example/references/cr/cr.piper";
+    public static final String PIPER_FILE = "references/cr/cr.piper";
     public static final String UMLS_KEY = Util.getProperty("umls.key");
 
     public static void main(String[] args) throws Exception {
