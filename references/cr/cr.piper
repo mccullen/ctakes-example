@@ -1,8 +1,8 @@
 // Our custom CR
-reader tutorial.LineReader InputFile=C:/root/vdt/icapa/nlp/ctakes-example-repos/ctakes-example/references/cr/documents.txt
+reader tutorial.LineReader InputFile=references/cr/documents.txt
 
 // Default Clinical Pipeline
 load ./resources/org/apache/ctakes/clinical/pipeline/DefaultFastPipeline.piper
 
 // FileTreeXmiWriter provided by cTAKES
-add org.apache.ctakes.core.cc.FileTreeXmiWriter OutputDirectory=C:/root/vdt/icapa/nlp/ctakes-example-repos/ctakes-example/references/cr/annotations
+add org.apache.ctakes.core.cc.FileTreeXmiWriter OutputDirectory=references/cr/annotations

@@ -4,9 +4,8 @@ reader tutorial.LineReader InputFile=references/cr/documents.txt
 // Default Clinical Pipeline
 load ./resources/org/apache/ctakes/clinical/pipeline/DefaultFastPipeline.piper
 
+// Our custom AE
 add tutorial.RegexAnnotator Regex="trauma|loss of consciousness"
 
 // FileTreeXmiWriter provided by cTAKES
 add org.apache.ctakes.core.cc.FileTreeXmiWriter OutputDirectory=references/ae/annotations
-
-// Run from bat: bin/runPiperFile.bat --key <key> -p C:\root\vdt\icapa\nlp\ctakes-example-repos\ctakes-example\references\ae\ae.piper
