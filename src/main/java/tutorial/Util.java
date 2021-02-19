@@ -28,6 +28,7 @@ public class Util {
             props.load(new FileInputStream(f));
             property = props.getProperty(key);
             System.out.println(property);
+            Util.class.getResource("");
         } catch (Exception e) {}
         return property;
     }

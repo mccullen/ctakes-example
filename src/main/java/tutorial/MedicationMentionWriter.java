@@ -48,7 +48,8 @@ public class MedicationMentionWriter extends JCasConsumer_ImplBase {
         "begin",
         "end",
         "umls_concept_address",
-        "coding_scheme_code",
+        "coding_scheme",
+        "code",
         "cui",
         "tui",
         "preferredText"

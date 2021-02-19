@@ -1,6 +1,8 @@
 package tutorial;
 
-import org.apache.ctakes.clinicalpipeline.ClinicalPipelineFactory;
+import org.apache.ctakes.core.pipeline.PipelineBuilder;
+import org.apache.ctakes.typesystem.type.refsem.UmlsConcept;
+import org.apache.ctakes.typesystem.type.textsem.MedicationMention;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.fit.factory.AggregateBuilder;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
@@ -8,56 +10,84 @@ import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.pipeline.SimplePipeline;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.jcas.cas.FSArray;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import tutorial.types.Text;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MedicationMentionWriterTests {
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
     @Test
-    public void testSimpleRegex() throws Exception {
-        // Arrange: Set document text on the CAS to our note and create RegexAnnotator AE that looks
-        // for for mentions of trauma and loss of consciousness in note
-        String note = "The patient says they took 325 mg aspirin for knee pain.";
+    public void writesMedicationCurrectly() throws Exception {
+        // Arrange: Add a test medication mention with a UMLS concept to the cas and create
+        // MedicationMentionWriter.
         JCas jCas = JCasFactory.createJCas();
-        jCas.setDocumentText(note);
-
+        UmlsConcept umlsConcept = getTestUmlsConcept(jCas);
+        MedicationMention medicationMention = getTestMedicationMention(jCas, umlsConcept);
+        medicationMention.addToIndexes();
         AggregateBuilder aggregateBuilder = new AggregateBuilder();
-        // Add the default clinical pipeline programatically
-        AnalysisEngineDescription defaultClinicalPipeline = ClinicalPipelineFactory.getDefaultPipeline();
-        aggregateBuilder.add(defaultClinicalPipeline);
-        // Add our MedicationMentionWriter CC after that
-        String outputFile = "";
-        File f = new File("src/test/resources/documents.txt");
-
+        // Create temp file to write to. This will be destroyed after the test completes
+        String outputFile = temporaryFolder.newFile("temp-medication-mentions.csv").toString();
         AnalysisEngineDescription aeDescription = AnalysisEngineFactory.createEngineDescription(
             MedicationMentionWriter.class,
-            MedicationMentionWriter.PARAM_DOUBLE_QUOTES, "false",
+            MedicationMentionWriter.PARAM_DOUBLE_QUOTES, false,
             MedicationMentionWriter.PARAM_OUTPUT_FILE, outputFile
         );
         aggregateBuilder.add(aeDescription);
 
-        // Act: Run the pipeline
-        // Note: CRs are usually mandatory, but you can actually run a SimplePipeline programmatically with just a jCas as we do
-        //       here. If you do that, it will just run the pipeline on one document: the one you set by calling jCas.setDocumentText().
-        //       We really only do this for testing purposes.
+        // Act: Run the pipeline with the MedicationMentionWriter
         SimplePipeline.runPipeline(jCas, aggregateBuilder.createAggregateDescription());
-        // If you didn't want to use an aggregate builder, you could also do this. Just FYI...
-        // SimplePipeline.runPipeline(jCas, defaultClinicalPipeline, aeDescription);
 
-        // Assert: The RegexAnnotator should have found two text mentions for trauma|loss of consciousness
-        int expectedSize = 2;
-        Collection<Text> texts = JCasUtil.select(jCas, Text.class);
-        assertEquals(expectedSize, texts.size());
-        for (Text text : texts) {
-            String actualText = note.substring(text.getBegin(), text.getEnd());
-            String expectedText = text.getText();
-            assertEquals(expectedText, actualText);
-            assertTrue(actualText.equals("trauma") || actualText.equals("loss of consciousness"));
-        }
+        // Assert: Make sure that the writer wrote our test medication mention correctly
+        FileInputStream fileInputStream = new FileInputStream(outputFile);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream));
+        String expectedFirstLine = "medication_mention_address,begin,end,umls_concept_address,coding_scheme,code,cui,tui,preferredText";
+        String actualFirstLine = reader.readLine();
+        assertEquals(expectedFirstLine, actualFirstLine);
+        String expectedSecondLine = medicationMention.getAddress() + "," +
+            medicationMention.getBegin() + "," +
+            medicationMention.getEnd() + "," +
+            umlsConcept.getAddress() + "," +
+            umlsConcept.getCodingScheme() + "," +
+            umlsConcept.getCode() + "," +
+            umlsConcept.getCui() + "," +
+            umlsConcept.getTui() + "," +
+            umlsConcept.getPreferredText();
+        String actualSecondLine = reader.readLine();
+        assertEquals(expectedSecondLine, actualSecondLine);
+    }
+
+    private UmlsConcept getTestUmlsConcept(JCas jCas) {
+        UmlsConcept umlsConcept = new UmlsConcept(jCas);
+        umlsConcept.setCui("C0004057");
+        umlsConcept.setTui("T121");
+        umlsConcept.setPreferredText("Aspirin");
+        umlsConcept.setCode("1191");
+        umlsConcept.setCodingScheme("RXNORM");
+        return umlsConcept;
+    }
+
+    private MedicationMention getTestMedicationMention(JCas jCas, UmlsConcept umlsConcept) {
+        MedicationMention medicationMention = new MedicationMention(jCas);
+        medicationMention.setBegin(34);
+        medicationMention.setEnd(41);
+        medicationMention.getOntologyConceptArr();
+        int fsArraySize = 1;
+        FSArray ontologyConceptArr = new FSArray(jCas, fsArraySize);
+        ontologyConceptArr.set(0, umlsConcept);
+        medicationMention.setOntologyConceptArr(ontologyConceptArr);
+        return medicationMention;
     }
 }

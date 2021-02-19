@@ -13,7 +13,6 @@ import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.pipeline.SimplePipeline;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
-import org.cleartk.token.type.Sentence;
 import org.junit.Ignore;
 import org.junit.Test;
 import tutorial.types.Text;
@@ -22,7 +21,7 @@ import java.util.Collection;
 
 public class RegexAnnotatorTests {
     @Test
-    public void testSimpleRegex() throws Exception {
+    public void addsTextAnnotationsWhenFound() throws Exception {
         // Arrange: Set document text on the CAS to our note and create RegexAnnotator AE that looks
         // for for mentions of trauma and loss of consciousness in note
         String note = "The patient has traumatic brain injury and has been experiencing loss of consciousness.";
