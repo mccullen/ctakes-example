@@ -76,7 +76,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>tutorial.Main</mainClass>
+                            <mainClass>tutorial.CreateAEDescriptorMain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
