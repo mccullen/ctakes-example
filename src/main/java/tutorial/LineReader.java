@@ -6,6 +6,7 @@ import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.component.JCasCollectionReader_ImplBase;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
+import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.Progress;
@@ -119,7 +120,17 @@ public class LineReader extends JCasCollectionReader_ImplBase {
         // Set its properties
         documentId.setDocumentID(String.valueOf(_nDocumentsProcessed));
         // DO NOT forget to add it to the indexes. This makes it retrievable from other UIMA components later in
-        // the pipeline. I'm not sure if you would ever NOT want to do this
+        // the pipeline. For example, you could call JCasUtil.select(jCas, DocumentID.class) from a subsequent
+        // component and get this DocumentID. So you will usually want to addToIndexes. The exception is when
+        // you have a type that contains another type.
+        //
+        // For example, a MedicationMention can have an array of UmlsConcepts and you may only want the
+        // MedicationMention to be retrievable using JCasUtil.select(jCas, MedicationMention.class). In this case,
+        // you would add the MedicationMention to the index but not the UmlsConcepts. So this would mean that
+        // JCasUtil.select(jCas, MedicationMention.class) would get you a collection of MedicationMentions. But
+        // JCasUtil.select(jCas, UmlsConcept.class) wouldn't get you anything since they were not added to the index.
+        // If you wanted those UmlsConcepts, you would have to get the MedicationMentions and get the UmlsConcepts
+        // from them instead.
         documentId.addToIndexes();
     }
 
