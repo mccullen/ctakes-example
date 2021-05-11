@@ -1,5 +1,5 @@
 target/**/*
 .idea/**/*
-src/main/resources/config.properties
+config.properties
 out/ctakes.log
 *.iml
