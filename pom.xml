@@ -112,8 +112,8 @@
             <groupId>org.apache.ctakes</groupId>
             <artifactId>ctakes-coreference</artifactId>
             <version>4.0.0.1</version>
-            <!-- Exclude dependency from jar-with-dependencies since CTAKES_HOME/lib already has this -->
-            <scope>provided</scope>
+            <!-- Exclude dependency from shaded jar if you want since CTAKES_HOME/lib already has this -->
+            <!--<scope>provided</scope>-->
         </dependency>
     </dependencies>
 
